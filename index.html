@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DELF-DALF Profs - Alliance Française</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .header-subtitle {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .header-right {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .btn-logout {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        /* Main content */
+        .main-content {
+            padding: 80px 15px 80px 15px;
+        }
+        
+        /* Login screen */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+        }
+        
+        .login-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .login-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1a237e;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #3949ab;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1a237e;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-primary { background: #e3f2fd; color: #1976d2; }
+        .badge-success { background: #e8f5e9; color: #388e3c; }
+        .badge-warning { background: #fff3e0; color: #f57c00; }
+        
+        /* Cours list */
+        .cours-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .cours-item:active {
+            transform: scale(0.98);
+        }
+        
+        .cours-niveau {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        
+        .cours-type {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .cours-info {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        
+        .cours-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Bottom nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #999;
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #1a237e;
+        }
+        
+        .nav-item .icon {
+            font-size: 1.4rem;
+            margin-bottom: 3px;
+        }
+        
+        /* Presence list */
+        .apprenant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .apprenant-item:last-child {
+            border-bottom: none;
+        }
+        
+        .apprenant-name {
+            font-weight: 500;
+        }
+        
+        .presence-btns {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-presence {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            background: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-presence.present {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-presence.absent {
+            background: #f44336;
+            border-color: #f44336;
+            color: white;
+        }
+        
+        /* Evaluation form */
+        .eval-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .eval-input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #666;
+        }
+        
+        .tab.active {
+            background: #1a237e;
+            color: white;
+        }
+        
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Date picker */
+        .date-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .date-nav button {
+            background: #e3f2fd;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .date-display {
+            font-weight: 600;
+            color: #1a237e;
+        }
+        
+        /* Button */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #1a237e;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e0e0e0;
+            border-top-color: #1a237e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Sync indicator */
+        .sync-indicator {
+            position: fixed;
+            top: 70px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 99;
+        }
+        
+        .sync-indicator.synced {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .sync-indicator.syncing {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .sync-indicator.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        /* DELF Blanc section */
+        .delf-blanc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .delf-blanc-item {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .delf-blanc-item label {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .delf-blanc-item input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        /* Salaire section */
+        .salaire-card {
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .salaire-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .salaire-label {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .salaire-cdi {
+            background: linear-gradient(135deg, #1976d2, #42a5f5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-logo">🎓</div>
+        <h1 class="login-title">Alliance Française d'Anjouan<br>Cours Prépa DELF-DALF</h1>
+        
+        <div class="login-box">
+            <h2>👨‍🏫 Connexion Prof</h2>
+            
+            <div class="form-group">
+                <label>Session</label>
+                <select id="loginSession">
+                    <option value="">Chargement...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Votre nom</label>
+                <select id="loginProf">
+                    <option value="">-- Sélectionnez --</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Code PIN (4 chiffres)</label>
+                <input type="password" id="loginPin" maxlength="4" placeholder="••••" inputmode="numeric">
+            </div>
+            
+            <button class="btn-login" onclick="login()">Se connecter</button>
+            
+            <p style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #999;">
+                PIN par défaut : 1234
+            </p>
+        </div>
+    </div>
+    
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎓 Cours Prépa DELF-DALF</h1>
+            <div class="header-subtitle" id="profNameHeader">Prof: -</div>
+            <div class="header-right">
+                <button class="btn-logout" onclick="logout()">Déconnexion</button>
+            </div>
+        </div>
+        
+        <!-- Sync indicator -->
+        <div class="sync-indicator synced" id="syncIndicator">✓ Synchronisé</div>
+        
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Tab: Mes Cours -->
+            <div id="tabMesCours">
+                <h2 style="margin-bottom: 15px; color: #1a237e;">📚 Mes Cours</h2>
+                <div id="coursListContainer">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+            
+            <!-- Tab: Cours Detail -->
+            <div id="tabCoursDetail" class="hidden">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <button onclick="showTab('mesCours')" style="background: #e3f2fd; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; margin-right: 10px;">←</button>
+                    <h2 id="coursDetailTitle" style="color: #1a237e;">Cours B2 TP</h2>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="showCoursTab('presence')">✅ Présences</div>
+                    <div class="tab" onclick="showCoursTab('evaluation')">📝 Évaluations</div>
+                    <div class="tab" onclick="showCoursTab('delfblanc')">📋 DELF Blanc</div>
+                </div>
+                
+                <!-- Date navigation for presence -->
+                <div class="date-nav" id="dateNav">
+                    <button onclick="changeDate(-1)">◀</button>
+                    <span class="date-display" id="currentDateDisplay">Lundi 15 Jan 2026</span>
+                    <button onclick="changeDate(1)">▶</button>
+                </div>
+                
+                <!-- Presence section -->
+                <div id="presenceSection" class="card">
+                    <div class="card-header">
+                        <div class="card-title">Liste des apprenants</div>
+                        <span class="badge badge-primary" id="presenceCount">0/0</span>
+                    </div>
+                    <div id="apprenantsList"></div>
+                </div>
+                
+                <!-- Evaluation section -->
+                <div id="evaluationSection" class="card hidden">
+                    <div class="card-header">
+                        <div class="card-title">📝 Notes d'évaluation</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Type d'évaluation</label>
+                        <select id="evalType" onchange="loadEvaluations()">
+                            <option value="devoir1">Devoir 1</option>
+                            <option value="devoir2">Devoir 2</option>
+                            <option value="devoir3">Devoir 3</option>
+                            <option value="examen_mi">Examen mi-parcours</option>
+                        </select>
+                    </div>
+                    <div id="evaluationList"></div>
+                    <button class="btn btn-success btn-block" onclick="saveEvaluations()" style="margin-top: 15px;">💾 Enregistrer les notes</button>
+                </div>
+                
+                <!-- DELF Blanc section -->
+                <div id="delfBlancSection" class="card hidden">
+                    <div class="card-header">
+                        <div class="card-title">📋 DELF Blanc</div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">
+                        Entrez les notes sur 25 pour chaque compétence
+                    </p>
+                    <div id="delfBlancList"></div>
+                    <button class="btn btn-success btn-block" onclick="saveDelfBlanc()" style="margin-top: 15px;">💾 Enregistrer DELF Blanc</button>
+                </div>
+            </div>
+            
+            <!-- Tab: Mon Salaire -->
+            <div id="tabSalaire" class="hidden">
+                <h2 style="margin-bottom: 15px; color: #1a237e;">💰 Mon Salaire</h2>
+                
+                <div id="salaireContainer"></div>
+            </div>
+            
+            <!-- Tab: Planning -->
+            <div id="tabPlanning" class="hidden">
+                <h2 style="margin-bottom: 15px; color: #1a237e;">📅 Mon Planning</h2>
+                
+                <div id="planningContainer"></div>
+            </div>
+        </div>
+        
+        <!-- Bottom navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showTab('mesCours')">
+                <span class="icon">📚</span>
+                <span>Mes Cours</span>
+            </div>
+            <div class="nav-item" onclick="showTab('salaire')">
+                <span class="icon">💰</span>
+                <span>Salaire</span>
+            </div>
+            <div class="nav-item" onclick="showTab('planning')">
+                <span class="icon">📅</span>
+                <span>Planning</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCy8CSw-pQ8B5IyJPhbZU_tVZtsRbHpCOs",
+            authDomain: "delf-dalf-af-anjouan.firebaseapp.com",
+            databaseURL: "https://delf-dalf-af-anjouan-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "delf-dalf-af-anjouan",
+            storageBucket: "delf-dalf-af-anjouan.firebasestorage.app",
+            messagingSenderId: "146715682545",
+            appId: "1:146715682545:web:5a5314f71fc2dfd3ed2b50"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        // State
+        let currentProf = null;
+        let currentSession = null;
+        let currentCours = null;
+        let currentDate = new Date();
+        let sessionsData = {};
+        let profsData = [];
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSessions();
+        });
+        
+        // Load sessions from Firebase
+        function loadSessions() {
+            db.ref('sessions').on('value', (snapshot) => {
+                sessionsData = snapshot.val() || {};
+                populateSessionSelect();
+                updateSyncIndicator('synced');
+            }, (error) => {
+                console.error('Error loading sessions:', error);
+                updateSyncIndicator('error');
+            });
+            
+            db.ref('profsAF').on('value', (snapshot) => {
+                profsData = snapshot.val() || [];
+                if (Array.isArray(profsData)) {
+                    populateProfSelect();
+                }
+            });
+        }
+        
+        function populateSessionSelect() {
+            const select = document.getElementById('loginSession');
+            select.innerHTML = '<option value="">-- Sélectionnez une session --</option>';
+            
+            Object.keys(sessionsData).forEach(sessionName => {
+                const option = document.createElement('option');
+                option.value = sessionName;
+                option.textContent = sessionName;
+                select.appendChild(option);
+            });
+            
+            select.onchange = populateProfSelect;
+        }
+        
+        function populateProfSelect() {
+            const sessionName = document.getElementById('loginSession').value;
+            const select = document.getElementById('loginProf');
+            select.innerHTML = '<option value="">-- Sélectionnez --</option>';
+            
+            if (!sessionName || !sessionsData[sessionName]) return;
+            
+            const session = sessionsData[sessionName];
+            const coursPrepa = session.coursPrepa || [];
+            
+            // Get unique prof names from cours prépa
+            const profs = [...new Set(coursPrepa.map(c => c.profNom).filter(Boolean))];
+            
+            profs.forEach(profName => {
+                const option = document.createElement('option');
+                option.value = profName;
+                option.textContent = profName;
+                select.appendChild(option);
+            });
+        }
+        
+        function login() {
+            const sessionName = document.getElementById('loginSession').value;
+            const profName = document.getElementById('loginProf').value;
+            const pin = document.getElementById('loginPin').value;
+            
+            if (!sessionName || !profName) {
+                alert('Veuillez sélectionner une session et votre nom');
+                return;
+            }
+            
+            // Simple PIN check (default: 1234)
+            // In production, you'd want to store PINs per prof in Firebase
+            const profData = profsData.find(p => p.nom === profName);
+            const validPin = profData?.pin || '1234';
+            
+            if (pin !== validPin) {
+                alert('Code PIN incorrect');
+                return;
+            }
+            
+            currentProf = profName;
+            currentSession = sessionName;
+            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('profNameHeader').textContent = `Prof: ${profName}`;
+            
+            loadMyCours();
+        }
+        
+        function logout() {
+            currentProf = null;
+            currentSession = null;
+            currentCours = null;
+            
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginPin').value = '';
+        }
+        
+        function loadMyCours() {
+            const container = document.getElementById('coursListContainer');
+            const session = sessionsData[currentSession];
+            
+            if (!session || !session.coursPrepa) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📚</div>
+                        <p>Aucun cours trouvé</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const myCours = session.coursPrepa.filter(c => c.profNom === currentProf);
+            
+            if (myCours.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📚</div>
+                        <p>Aucun cours assigné</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = myCours.map((cours, index) => {
+                const nbApprenants = cours.apprenants?.length || 0;
+                const typeFull = cours.type === 'J' ? 'Junior' : 'Tout Public';
+                
+                return `
+                    <div class="cours-item" onclick="openCours(${index})">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span class="cours-niveau">${cours.niveau}</span>
+                                <span class="cours-type">${typeFull}</span>
+                            </div>
+                            <span class="badge badge-primary">${nbApprenants} apprenants</span>
+                        </div>
+                        <div class="cours-info">
+                            <span>🕐 ${cours.heures}h</span>
+                            <span>📅 ${cours.jours || 'Non défini'}</span>
+                            <span>💰 ${formatMoney(cours.tarif)} / pers</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function openCours(index) {
+            const session = sessionsData[currentSession];
+            const myCours = session.coursPrepa.filter(c => c.profNom === currentProf);
+            currentCours = myCours[index];
+            currentCours._index = session.coursPrepa.findIndex(c => 
+                c.niveau === currentCours.niveau && 
+                c.type === currentCours.type && 
+                c.profNom === currentCours.profNom
+            );
+            
+            const typeFull = currentCours.type === 'J' ? 'Junior' : 'Tout Public';
+            document.getElementById('coursDetailTitle').textContent = `${currentCours.niveau} ${typeFull}`;
+            
+            showTab('coursDetail');
+            showCoursTab('presence');
+            loadPresences();
+        }
+        
+        function showTab(tab) {
+            // Hide all tabs
+            document.getElementById('tabMesCours').classList.add('hidden');
+            document.getElementById('tabCoursDetail').classList.add('hidden');
+            document.getElementById('tabSalaire').classList.add('hidden');
+            document.getElementById('tabPlanning').classList.add('hidden');
+            
+            // Reset nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            // Show selected tab
+            switch(tab) {
+                case 'mesCours':
+                    document.getElementById('tabMesCours').classList.remove('hidden');
+                    document.querySelectorAll('.nav-item')[0].classList.add('active');
+                    loadMyCours();
+                    break;
+                case 'coursDetail':
+                    document.getElementById('tabCoursDetail').classList.remove('hidden');
+                    break;
+                case 'salaire':
+                    document.getElementById('tabSalaire').classList.remove('hidden');
+                    document.querySelectorAll('.nav-item')[1].classList.add('active');
+                    loadSalaire();
+                    break;
+                case 'planning':
+                    document.getElementById('tabPlanning').classList.remove('hidden');
+                    document.querySelectorAll('.nav-item')[2].classList.add('active');
+                    loadPlanning();
+                    break;
+            }
+        }
+        
+        function showCoursTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all sections
+            document.getElementById('presenceSection').classList.add('hidden');
+            document.getElementById('evaluationSection').classList.add('hidden');
+            document.getElementById('delfBlancSection').classList.add('hidden');
+            document.getElementById('dateNav').classList.add('hidden');
+            
+            // Show selected section
+            switch(tab) {
+                case 'presence':
+                    document.getElementById('presenceSection').classList.remove('hidden');
+                    document.getElementById('dateNav').classList.remove('hidden');
+                    loadPresences();
+                    break;
+                case 'evaluation':
+                    document.getElementById('evaluationSection').classList.remove('hidden');
+                    loadEvaluations();
+                    break;
+                case 'delfblanc':
+                    document.getElementById('delfBlancSection').classList.remove('hidden');
+                    loadDelfBlanc();
+                    break;
+            }
+        }
+        
+        function formatDate(date) {
+            const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+            const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+            return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        }
+        
+        function getDateKey(date) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        function changeDate(delta) {
+            currentDate.setDate(currentDate.getDate() + delta);
+            document.getElementById('currentDateDisplay').textContent = formatDate(currentDate);
+            loadPresences();
+        }
+        
+        function loadPresences() {
+            document.getElementById('currentDateDisplay').textContent = formatDate(currentDate);
+            
+            const apprenants = currentCours.apprenants || [];
+            const dateKey = getDateKey(currentDate);
+            const presences = currentCours.presences?.[dateKey] || {};
+            
+            let presentCount = 0;
+            
+            const html = apprenants.map((app, i) => {
+                const status = presences[i] || '';
+                if (status === 'present') presentCount++;
+                
+                return `
+                    <div class="apprenant-item">
+                        <span class="apprenant-name">${app.nom || 'Apprenant ' + (i+1)}</span>
+                        <div class="presence-btns">
+                            <button class="btn-presence ${status === 'present' ? 'present' : ''}" 
+                                    onclick="setPresence(${i}, 'present')">✓</button>
+                            <button class="btn-presence ${status === 'absent' ? 'absent' : ''}" 
+                                    onclick="setPresence(${i}, 'absent')">✗</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('apprenantsList').innerHTML = html || '<p style="padding: 20px; color: #999;">Aucun apprenant inscrit</p>';
+            document.getElementById('presenceCount').textContent = `${presentCount}/${apprenants.length}`;
+        }
+        
+        function setPresence(appIndex, status) {
+            const dateKey = getDateKey(currentDate);
+            
+            if (!currentCours.presences) currentCours.presences = {};
+            if (!currentCours.presences[dateKey]) currentCours.presences[dateKey] = {};
+            
+            currentCours.presences[dateKey][appIndex] = status;
+            
+            // Save to Firebase
+            saveCoursToFirebase();
+            loadPresences();
+        }
+        
+        function loadEvaluations() {
+            const evalType = document.getElementById('evalType').value;
+            const apprenants = currentCours.apprenants || [];
+            const evaluations = currentCours.evaluations?.[evalType] || {};
+            
+            const html = apprenants.map((app, i) => {
+                const note = evaluations[i] || '';
+                
+                return `
+                    <div class="eval-item">
+                        <span class="apprenant-name">${app.nom || 'Apprenant ' + (i+1)}</span>
+                        <input type="number" class="eval-input" id="eval_${i}" 
+                               value="${note}" min="0" max="100" placeholder="--">
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('evaluationList').innerHTML = html || '<p style="padding: 20px; color: #999;">Aucun apprenant inscrit</p>';
+        }
+        
+        function saveEvaluations() {
+            const evalType = document.getElementById('evalType').value;
+            const apprenants = currentCours.apprenants || [];
+            
+            if (!currentCours.evaluations) currentCours.evaluations = {};
+            if (!currentCours.evaluations[evalType]) currentCours.evaluations[evalType] = {};
+            
+            apprenants.forEach((app, i) => {
+                const input = document.getElementById(`eval_${i}`);
+                if (input && input.value) {
+                    currentCours.evaluations[evalType][i] = parseFloat(input.value);
+                }
+            });
+            
+            saveCoursToFirebase();
+            alert('✅ Notes enregistrées !');
+        }
+        
+        function loadDelfBlanc() {
+            const apprenants = currentCours.apprenants || [];
+            const delfBlanc = currentCours.delfBlanc || {};
+            
+            const html = apprenants.map((app, i) => {
+                const notes = delfBlanc[i] || {};
+                
+                return `
+                    <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                        <div style="font-weight: 600; margin-bottom: 10px;">${app.nom || 'Apprenant ' + (i+1)}</div>
+                        <div class="delf-blanc-grid">
+                            <div class="delf-blanc-item">
+                                <label>CO</label>
+                                <input type="number" id="delf_co_${i}" value="${notes.co || ''}" min="0" max="25" placeholder="/25">
+                            </div>
+                            <div class="delf-blanc-item">
+                                <label>CE</label>
+                                <input type="number" id="delf_ce_${i}" value="${notes.ce || ''}" min="0" max="25" placeholder="/25">
+                            </div>
+                            <div class="delf-blanc-item">
+                                <label>PE</label>
+                                <input type="number" id="delf_pe_${i}" value="${notes.pe || ''}" min="0" max="25" placeholder="/25">
+                            </div>
+                            <div class="delf-blanc-item">
+                                <label>PO</label>
+                                <input type="number" id="delf_po_${i}" value="${notes.po || ''}" min="0" max="25" placeholder="/25">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('delfBlancList').innerHTML = html || '<p style="padding: 20px; color: #999;">Aucun apprenant inscrit</p>';
+        }
+        
+        function saveDelfBlanc() {
+            const apprenants = currentCours.apprenants || [];
+            
+            if (!currentCours.delfBlanc) currentCours.delfBlanc = {};
+            
+            apprenants.forEach((app, i) => {
+                const co = document.getElementById(`delf_co_${i}`)?.value;
+                const ce = document.getElementById(`delf_ce_${i}`)?.value;
+                const pe = document.getElementById(`delf_pe_${i}`)?.value;
+                const po = document.getElementById(`delf_po_${i}`)?.value;
+                
+                if (co || ce || pe || po) {
+                    currentCours.delfBlanc[i] = {
+                        co: parseFloat(co) || 0,
+                        ce: parseFloat(ce) || 0,
+                        pe: parseFloat(pe) || 0,
+                        po: parseFloat(po) || 0,
+                        total: (parseFloat(co) || 0) + (parseFloat(ce) || 0) + (parseFloat(pe) || 0) + (parseFloat(po) || 0)
+                    };
+                }
+            });
+            
+            saveCoursToFirebase();
+            alert('✅ Notes DELF Blanc enregistrées !');
+        }
+        
+        function saveCoursToFirebase() {
+            updateSyncIndicator('syncing');
+            
+            const coursPath = `sessions/${currentSession}/coursPrepa/${currentCours._index}`;
+            
+            db.ref(coursPath).set(currentCours)
+                .then(() => {
+                    updateSyncIndicator('synced');
+                })
+                .catch((error) => {
+                    console.error('Save error:', error);
+                    updateSyncIndicator('error');
+                });
+        }
+        
+        function loadSalaire() {
+            const session = sessionsData[currentSession];
+            const myCours = (session?.coursPrepa || []).filter(c => c.profNom === currentProf);
+            
+            // Get prof salary from profsAF
+            const profData = profsData.find(p => p.nom === currentProf);
+            const salaireHoraire = profData?.salaireHoraire || 0;
+            const isCDI = salaireHoraire === 0;
+            
+            let totalHeures = 0;
+            myCours.forEach(c => {
+                totalHeures += c.heures || 0;
+            });
+            
+            const totalSalaire = totalHeures * salaireHoraire;
+            
+            let html = `
+                <div class="salaire-card ${isCDI ? 'salaire-cdi' : ''}">
+                    ${isCDI ? `
+                        <div class="salaire-label">Contrat CDI</div>
+                        <div class="salaire-amount">Salarié</div>
+                        <div class="salaire-label">Pas de paiement à l'heure</div>
+                    ` : `
+                        <div class="salaire-label">Salaire total</div>
+                        <div class="salaire-amount">${formatMoney(totalSalaire)} KMF</div>
+                        <div class="salaire-label">${totalHeures}h × ${formatMoney(salaireHoraire)} KMF</div>
+                    `}
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${myCours.length}</div>
+                        <div class="stat-label">Cours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalHeures}h</div>
+                        <div class="stat-label">Total heures</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📚 Détail des cours</div>
+            `;
+            
+            myCours.forEach(c => {
+                const typeFull = c.type === 'J' ? 'Junior' : 'Tout Public';
+                const coursGain = isCDI ? '-' : formatMoney(c.heures * salaireHoraire) + ' KMF';
+                
+                html += `
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee;">
+                        <div>
+                            <strong>${c.niveau} ${typeFull}</strong>
+                            <div style="font-size: 0.85rem; color: #666;">${c.heures}h</div>
+                        </div>
+                        <div style="text-align: right; color: ${isCDI ? '#1976d2' : '#4CAF50'}; font-weight: 600;">
+                            ${coursGain}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            document.getElementById('salaireContainer').innerHTML = html;
+        }
+        
+        function loadPlanning() {
+            const session = sessionsData[currentSession];
+            const myCours = (session?.coursPrepa || []).filter(c => c.profNom === currentProf);
+            
+            let html = '';
+            
+            if (myCours.length === 0) {
+                html = `
+                    <div class="empty-state">
+                        <div class="icon">📅</div>
+                        <p>Aucun cours programmé</p>
+                    </div>
+                `;
+            } else {
+                myCours.forEach(c => {
+                    const typeFull = c.type === 'J' ? 'Junior' : 'Tout Public';
+                    const nbApprenants = c.apprenants?.length || 0;
+                    
+                    html += `
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span style="font-size: 1.3rem; font-weight: 700; color: #1a237e;">${c.niveau}</span>
+                                    <span style="color: #666;">${typeFull}</span>
+                                </div>
+                                <span class="badge badge-primary">${nbApprenants} apprenants</span>
+                            </div>
+                            <div style="margin-top: 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                                <div style="background: #f5f5f5; padding: 10px; border-radius: 8px;">
+                                    <div style="font-size: 0.75rem; color: #666;">📅 Jours</div>
+                                    <div style="font-weight: 600;">${c.jours || 'Non défini'}</div>
+                                </div>
+                                <div style="background: #f5f5f5; padding: 10px; border-radius: 8px;">
+                                    <div style="font-size: 0.75rem; color: #666;">🕐 Durée totale</div>
+                                    <div style="font-weight: 600;">${c.heures}h</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('planningContainer').innerHTML = html;
+        }
+        
+        function updateSyncIndicator(status) {
+            const indicator = document.getElementById('syncIndicator');
+            indicator.className = 'sync-indicator ' + status;
+            
+            switch(status) {
+                case 'synced':
+                    indicator.textContent = '✓ Synchronisé';
+                    break;
+                case 'syncing':
+                    indicator.textContent = '⏳ Sync...';
+                    break;
+                case 'error':
+                    indicator.textContent = '❌ Erreur sync';
+                    break;
+            }
+        }
+        
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('fr-FR').format(amount || 0);
+        }
+    </script>
+</body>
+</html>
