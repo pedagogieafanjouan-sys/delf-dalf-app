@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DELF-DALF Profs - Alliance Française</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1a237e;
+            --primary-light: #3949ab;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #f44336;
+            --gray: #666;
+            --light-gray: #f5f5f5;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light-gray);
+            min-height: 100vh;
+            color: #333;
+            padding-bottom: 70px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .header-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .header-right {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .sync-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .sync-badge.ok { background: rgba(76,175,80,0.3); }
+        .sync-badge.syncing { background: rgba(255,152,0,0.3); }
+        .sync-badge.error { background: rgba(244,67,54,0.3); }
+        
+        /* Main content */
+        .main-content {
+            padding: 75px 15px 20px 15px;
+        }
+        
+        /* Login screen */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        
+        .login-logo {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .login-title {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-block { width: 100%; }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-primary { background: #e3f2fd; color: #1976d2; }
+        .badge-success { background: #e8f5e9; color: #388e3c; }
+        .badge-warning { background: #fff3e0; color: #f57c00; }
+        .badge-danger { background: #ffebee; color: #c62828; }
+        .badge-purple { background: #f3e5f5; color: #7b1fa2; }
+        
+        /* Section title */
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #999;
+            font-size: 0.65rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item .icon {
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+        }
+        
+        /* Agenda */
+        .agenda-day {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        
+        .agenda-day-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 10px 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .agenda-seance {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .agenda-seance:last-child {
+            border-bottom: none;
+        }
+        
+        .seance-time {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .seance-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .seance-niveau {
+            font-weight: 600;
+        }
+        
+        .seance-type {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .presence-toggle {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .presence-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            background: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .presence-btn.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .presence-btn.pending {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: white;
+        }
+        
+        /* Cours list */
+        .cours-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .cours-card:active {
+            transform: scale(0.98);
+        }
+        
+        .cours-card.regrouped {
+            border-left-color: #9C27B0;
+        }
+        
+        .cours-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cours-niveau {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .cours-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .cours-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+        
+        /* Salaire card */
+        .salaire-card {
+            background: linear-gradient(135deg, var(--success), #66BB6A);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .salaire-amount {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        .salaire-label {
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+        
+        .salaire-card.cdi {
+            background: linear-gradient(135deg, #1976d2, #42a5f5);
+        }
+        
+        /* Apprenant item */
+        .apprenant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .apprenant-item:last-child {
+            border-bottom: none;
+        }
+        
+        .apprenant-name {
+            font-weight: 500;
+        }
+        
+        .apprenant-code {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Input styles */
+        .note-input {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .note-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+        
+        /* DELF Blanc grid */
+        .delf-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .delf-item {
+            text-align: center;
+        }
+        
+        .delf-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+        
+        .delf-item input {
+            width: 100%;
+            padding: 8px 4px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        /* Results */
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .result-badge.admis {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .result-badge.refuse {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .result-badge.attente {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        /* Documentation */
+        .doc-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .doc-icon {
+            font-size: 2rem;
+        }
+        
+        .doc-info h4 {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .doc-info p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        /* Profil */
+        .profil-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .profil-avatar {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 15px;
+        }
+        
+        .profil-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .profil-role {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .profil-stat {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        
+        .profil-stat-item {
+            text-align: center;
+        }
+        
+        .profil-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .profil-stat-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .profil-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .profil-info-label {
+            color: var(--gray);
+        }
+        
+        .profil-info-value {
+            font-weight: 600;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 8px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray);
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Week navigation */
+        .week-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .week-nav button {
+            background: #e3f2fd;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .week-display {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Help section */
+        .help-step {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .help-step-number {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .help-step h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .help-step p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            color: var(--primary);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        /* Grille evaluation */
+        .grille-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .grille-table th, .grille-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .grille-table th {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .grille-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        /* Back button */
+        .back-btn {
+            background: #e3f2fd;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-logo">🎓</div>
+        <h1 class="login-title">Alliance Française d'Anjouan<br>Espace Professeur</h1>
+        
+        <div class="login-box">
+            <h2>👨‍🏫 Connexion</h2>
+            
+            <div class="form-group">
+                <label>Session</label>
+                <select id="loginSession">
+                    <option value="">Chargement...</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Votre nom</label>
+                <select id="loginProf">
+                    <option value="">-- Sélectionnez --</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="loginPassword" placeholder="Votre mot de passe">
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="login()">Se connecter</button>
+            
+            <p style="text-align: center; margin-top: 15px; font-size: 0.75rem; color: #999;">
+                Mot de passe oublié ? Contactez l'administration.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <h1 id="headerTitle">📚 Mon Agenda</h1>
+            <div class="header-subtitle" id="profNameHeader">Prof: -</div>
+            <div class="header-right">
+                <span class="sync-badge ok" id="syncBadge">✓ Sync</span>
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="main-content" id="mainContent">
+            <!-- Content will be loaded here -->
+        </div>
+        
+        <!-- Bottom navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-tab="agenda" onclick="showTab('agenda')">
+                <span class="icon">📅</span>
+                <span>Agenda</span>
+            </div>
+            <div class="nav-item" data-tab="cours" onclick="showTab('cours')">
+                <span class="icon">📚</span>
+                <span>Cours</span>
+            </div>
+            <div class="nav-item" data-tab="evaluations" onclick="showTab('evaluations')">
+                <span class="icon">📝</span>
+                <span>Notes</span>
+            </div>
+            <div class="nav-item" data-tab="resultats" onclick="showTab('resultats')">
+                <span class="icon">🏆</span>
+                <span>Résultats</span>
+            </div>
+            <div class="nav-item" data-tab="more" onclick="showTab('more')">
+                <span class="icon">☰</span>
+                <span>Plus</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal container -->
+    <div id="modalContainer" class="modal-overlay hidden" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCy8CSw-pQ8B5IyJPhbZU_tVZtsRbHpCOs",
+            authDomain: "delf-dalf-af-anjouan.firebaseapp.com",
+            databaseURL: "https://delf-dalf-af-anjouan-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "delf-dalf-af-anjouan",
+            storageBucket: "delf-dalf-af-anjouan.firebasestorage.app",
+            messagingSenderId: "146715682545",
+            appId: "1:146715682545:web:5a5314f71fc2dfd3ed2b50"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        // State
+        let currentProf = null;
+        let currentProfData = null;
+        let currentSession = null;
+        let currentSessionData = null;
+        let sessionsData = {};
+        let profsData = [];
+        let candidatsData = [];
+        let currentWeekStart = getMonday(new Date());
+        let currentTab = 'agenda';
+        let selectedCours = null;
+        
+        // Descripteurs CECRL par niveau
+        const DESCRIPTEURS = {
+            A1: {
+                titre: "Niveau A1 - Utilisateur élémentaire (découverte)",
+                description: "Peut comprendre et utiliser des expressions familières et quotidiennes ainsi que des énoncés très simples qui visent à satisfaire des besoins concrets.",
+                pe: "Peut écrire une courte carte postale simple. Peut porter des détails personnels dans un questionnaire.",
+                po: "Peut communiquer de façon simple si l'interlocuteur parle lentement et distinctement."
+            },
+            A2: {
+                titre: "Niveau A2 - Utilisateur élémentaire (survie)",
+                description: "Peut comprendre des phrases isolées et des expressions fréquemment utilisées en relation avec des domaines immédiats de priorité.",
+                pe: "Peut écrire des notes et messages simples et courts. Peut écrire une lettre personnelle très simple.",
+                po: "Peut communiquer lors de tâches simples et habituelles ne demandant qu'un échange d'informations simple et direct."
+            },
+            B1: {
+                titre: "Niveau B1 - Utilisateur indépendant (seuil)",
+                description: "Peut comprendre les points essentiels quand un langage clair et standard est utilisé et s'il s'agit de choses familières.",
+                pe: "Peut écrire un texte simple et cohérent sur des sujets familiers ou qui l'intéressent personnellement.",
+                po: "Peut faire face à la majorité des situations que l'on peut rencontrer au cours d'un voyage."
+            },
+            B2: {
+                titre: "Niveau B2 - Utilisateur indépendant (avancé)",
+                description: "Peut comprendre le contenu essentiel de sujets concrets ou abstraits dans un texte complexe, y compris une discussion technique dans sa spécialité.",
+                pe: "Peut écrire des textes clairs et détaillés sur une grande gamme de sujets relatifs à ses intérêts.",
+                po: "Peut communiquer avec un degré de spontanéité et d'aisance tel qu'une conversation avec un locuteur natif."
+            },
+            C1: {
+                titre: "Niveau C1 - Utilisateur expérimenté (autonome)",
+                description: "Peut comprendre une grande gamme de textes longs et exigeants, ainsi que saisir des significations implicites.",
+                pe: "Peut s'exprimer dans un texte clair et bien structuré et développer son point de vue.",
+                po: "Peut s'exprimer spontanément et couramment sans trop apparemment devoir chercher ses mots."
+            },
+            C2: {
+                titre: "Niveau C2 - Utilisateur expérimenté (maîtrise)",
+                description: "Peut comprendre sans effort pratiquement tout ce qu'il/elle lit ou entend.",
+                pe: "Peut écrire un texte clair, fluide et stylistiquement adapté aux circonstances.",
+                po: "Peut s'exprimer spontanément, très couramment et de façon précise."
+            }
+        };
+        
+        // Grilles d'évaluation
+        const GRILLES = {
+            PE: {
+                B1: [
+                    { critere: "Respect de la consigne", points: 2, description: "Respecte la situation et le type de production demandée. Respecte la consigne de longueur minimale." },
+                    { critere: "Capacité à présenter des faits", points: 4, description: "Peut décrire des faits, des événements ou des expériences." },
+                    { critere: "Capacité à exprimer sa pensée", points: 4, description: "Peut présenter ses idées, ses sentiments et/ou ses réactions et donner son opinion." },
+                    { critere: "Cohérence et cohésion", points: 3, description: "Peut relier une série d'éléments courts, simples et distincts en un discours qui s'enchaîne." },
+                    { critere: "Compétence lexicale", points: 4, description: "Étendue et maîtrise du vocabulaire." },
+                    { critere: "Compétence grammaticale", points: 5, description: "Degré d'élaboration des phrases. Choix des temps et des modes. Morphosyntaxe - orthographe grammaticale." },
+                    { critere: "Compétence orthographique", points: 3, description: "Maîtrise de l'orthographe lexicale." }
+                ],
+                B2: [
+                    { critere: "Respect de la consigne", points: 2, description: "Respecte la situation et le type de production demandée. Respecte la consigne de longueur minimale." },
+                    { critere: "Capacité à argumenter", points: 5, description: "Peut développer une argumentation en soulignant les points significatifs." },
+                    { critere: "Cohérence et cohésion", points: 4, description: "Peut relier clairement les idées exprimées sous forme d'un texte fluide et cohérent." },
+                    { critere: "Compétence lexicale", points: 4, description: "Étendue et maîtrise du vocabulaire." },
+                    { critere: "Compétence grammaticale", points: 5, description: "Maîtrise des structures grammaticales." },
+                    { critere: "Compétence orthographique", points: 2, description: "Maîtrise de l'orthographe." }
+                ]
+            },
+            PO: {
+                B1: [
+                    { critere: "Monologue suivi (Entretien dirigé)", points: 5, description: "Peut parler de soi avec une certaine assurance. Peut présenter clairement son environnement quotidien." },
+                    { critere: "Exercice en interaction", points: 5, description: "Peut faire face à des situations variées avec une relative aisance." },
+                    { critere: "Expression d'un point de vue", points: 5, description: "Peut exprimer son opinion et la justifier." },
+                    { critere: "Lexique (étendue et maîtrise)", points: 4, description: "Possède un vocabulaire suffisant pour s'exprimer sur des sujets courants." },
+                    { critere: "Morphosyntaxe", points: 5, description: "Maîtrise bien la structure de la phrase simple." },
+                    { critere: "Phonétique", points: 3, description: "Prononciation claire et compréhensible." }
+                ],
+                B2: [
+                    { critere: "Monologue suivi : argumentation", points: 5, description: "Peut développer une argumentation claire avec des arguments secondaires." },
+                    { critere: "Exercice en interaction : débat", points: 5, description: "Peut participer à une conversation avec une certaine fluidité." },
+                    { critere: "Lexique (étendue et maîtrise)", points: 4, description: "Dispose d'un vocabulaire suffisamment large pour varier la formulation." },
+                    { critere: "Morphosyntaxe", points: 5, description: "A un bon contrôle grammatical." },
+                    { critere: "Phonétique", points: 3, description: "A acquis une prononciation et une intonation claires et naturelles." }
+                ]
+            }
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+        
+        // Load data from Firebase
+        function loadData() {
+            db.ref('sessions').on('value', (snapshot) => {
+                sessionsData = snapshot.val() || {};
+                populateSessionSelect();
+                if (currentSession && currentProf) {
+                    currentSessionData = sessionsData[currentSession];
+                    refreshCurrentTab();
+                }
+                updateSyncBadge('ok');
+            }, (error) => {
+                console.error('Error:', error);
+                updateSyncBadge('error');
+            });
+            
+            db.ref('profsAF').on('value', (snapshot) => {
+                const data = snapshot.val();
+                profsData = Array.isArray(data) ? data : [];
+                if (currentProf) {
+                    currentProfData = profsData.find(p => p.nom === currentProf);
+                }
+            });
+        }
+        
+        function populateSessionSelect() {
+            const select = document.getElementById('loginSession');
+            select.innerHTML = '<option value="">-- Sélectionnez --</option>';
+            
+            Object.keys(sessionsData).sort().reverse().forEach(sessionName => {
+                const option = document.createElement('option');
+                option.value = sessionName;
+                option.textContent = sessionsData[sessionName].name || sessionName;
+                select.appendChild(option);
+            });
+            
+            select.onchange = populateProfSelect;
+        }
+        
+        function populateProfSelect() {
+            const sessionName = document.getElementById('loginSession').value;
+            const select = document.getElementById('loginProf');
+            select.innerHTML = '<option value="">-- Sélectionnez --</option>';
+            
+            if (!sessionName || !sessionsData[sessionName]) return;
+            
+            const session = sessionsData[sessionName];
+            const coursPrepa = session.coursPrepa || [];
+            
+            // Get unique prof names
+            const profs = [...new Set(coursPrepa.map(c => c.profNom).filter(Boolean))];
+            
+            profs.sort().forEach(profName => {
+                const option = document.createElement('option');
+                option.value = profName;
+                option.textContent = profName;
+                select.appendChild(option);
+            });
+        }
+        
+        function login() {
+            const sessionName = document.getElementById('loginSession').value;
+            const profName = document.getElementById('loginProf').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!sessionName || !profName) {
+                alert('Veuillez sélectionner une session et votre nom');
+                return;
+            }
+            
+            // Check password from profsAF
+            const profData = profsData.find(p => p.nom === profName);
+            const validPassword = profData?.password || '1234';
+            
+            if (password !== validPassword) {
+                alert('Mot de passe incorrect');
+                return;
+            }
+            
+            currentProf = profName;
+            currentProfData = profData;
+            currentSession = sessionName;
+            currentSessionData = sessionsData[sessionName];
+            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('profNameHeader').textContent = profName;
+            
+            showTab('agenda');
+        }
+        
+        function logout() {
+            currentProf = null;
+            currentProfData = null;
+            currentSession = null;
+            currentSessionData = null;
+            
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginPassword').value = '';
+        }
+        
+        function showTab(tab) {
+            currentTab = tab;
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.tab === tab);
+            });
+            
+            // Update header
+            const titles = {
+                agenda: '📅 Mon Agenda',
+                cours: '📚 Mes Cours',
+                evaluations: '📝 Évaluations',
+                resultats: '🏆 Résultats',
+                more: '☰ Plus'
+            };
+            document.getElementById('headerTitle').textContent = titles[tab] || 'DELF-DALF';
+            
+            refreshCurrentTab();
+        }
+        
+        function refreshCurrentTab() {
+            switch(currentTab) {
+                case 'agenda': renderAgenda(); break;
+                case 'cours': renderCours(); break;
+                case 'evaluations': renderEvaluations(); break;
+                case 'resultats': renderResultats(); break;
+                case 'more': renderMore(); break;
+            }
+        }
+        
+        // Get my courses
+        function getMyCours() {
+            if (!currentSessionData || !currentSessionData.coursPrepa) return [];
+            return currentSessionData.coursPrepa.filter(c => c.profNom === currentProf);
+        }
+        
+        // Get all my apprenants (across all my courses)
+        function getMyApprenants() {
+            const myCours = getMyCours();
+            const apprenants = [];
+            
+            myCours.forEach(cours => {
+                (cours.apprenants || []).forEach(app => {
+                    apprenants.push({
+                        ...app,
+                        coursNiveau: cours.niveau,
+                        coursType: cours.type,
+                        coursId: cours.id
+                    });
+                });
+            });
+            
+            return apprenants;
+        }
+        
+        // Get my candidates (those who passed the exam)
+        function getMyCandidats() {
+            const myApprenants = getMyApprenants();
+            const candidats = [];
+            
+            // Match apprenants with candidates by codeCandidat
+            if (currentSessionData.candidates) {
+                Object.values(currentSessionData.candidates).forEach(cand => {
+                    if (cand.codeCandidat) {
+                        const apprenant = myApprenants.find(a => a.codeCandidat === cand.codeCandidat);
+                        if (apprenant) {
+                            candidats.push({
+                                ...cand,
+                                ...apprenant
+                            });
+                        }
+                    }
+                });
+            }
+            
+            return candidats;
+        }
+        
+        // ============ AGENDA ============
+        function renderAgenda() {
+            const myCours = getMyCours();
+            const content = document.getElementById('mainContent');
+            
+            if (myCours.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📅</div>
+                        <p>Aucun cours assigné pour cette session</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Week navigation
+            const weekEnd = new Date(currentWeekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            
+            let html = `
+                <div class="week-nav">
+                    <button onclick="changeWeek(-1)">◀</button>
+                    <span class="week-display">${formatDateShort(currentWeekStart)} - ${formatDateShort(weekEnd)}</span>
+                    <button onclick="changeWeek(1)">▶</button>
+                </div>
+            `;
+            
+            // Get all seances for this week
+            const weekSeances = [];
+            myCours.forEach(cours => {
+                (cours.seances || []).forEach(seance => {
+                    const seanceDate = new Date(seance.date);
+                    if (seanceDate >= currentWeekStart && seanceDate <= weekEnd) {
+                        weekSeances.push({
+                            ...seance,
+                            cours,
+                            dateObj: seanceDate
+                        });
+                    }
+                });
+            });
+            
+            // Sort by date
+            weekSeances.sort((a, b) => a.dateObj - b.dateObj);
+            
+            // Group by day
+            const byDay = {};
+            weekSeances.forEach(s => {
+                const dayKey = s.date;
+                if (!byDay[dayKey]) byDay[dayKey] = [];
+                byDay[dayKey].push(s);
+            });
+            
+            if (Object.keys(byDay).length === 0) {
+                html += `
+                    <div class="empty-state">
+                        <div class="icon">📅</div>
+                        <p>Pas de cours cette semaine</p>
+                    </div>
+                `;
+            } else {
+                Object.keys(byDay).sort().forEach(day => {
+                    const seances = byDay[day];
+                    const dayDate = new Date(day);
+                    const isToday = isSameDay(dayDate, new Date());
+                    const isPast = dayDate < new Date() && !isToday;
+                    
+                    html += `
+                        <div class="agenda-day" style="${isToday ? 'border: 2px solid var(--primary);' : ''}">
+                            <div class="agenda-day-header" style="${isPast ? 'opacity: 0.7;' : ''}">
+                                <span>${formatDayName(dayDate)} ${dayDate.getDate()}</span>
+                                ${isToday ? '<span class="badge badge-warning">Aujourd\'hui</span>' : ''}
+                            </div>
+                    `;
+                    
+                    seances.forEach(s => {
+                        const typeFull = s.cours.type === 'TP+J' ? 'TP+Junior' : (s.cours.type === 'J' ? 'Junior' : 'Tout Public');
+                        const nbApprenants = s.cours.apprenants?.length || 0;
+                        const presencesDone = s.status === 'done';
+                        
+                        html += `
+                            <div class="agenda-seance" onclick="openPresenceModal('${s.cours.id}', '${s.date}')">
+                                <span class="seance-time">${s.heureDebut || '14:00'}</span>
+                                <div class="seance-info">
+                                    <span class="seance-niveau">${s.cours.niveau} ${typeFull}</span>
+                                    <span class="seance-type">${nbApprenants} apprenants</span>
+                                </div>
+                                <button class="presence-btn ${presencesDone ? 'done' : (isPast ? 'pending' : '')}" 
+                                        onclick="event.stopPropagation(); openPresenceModal('${s.cours.id}', '${s.date}')">
+                                    ${presencesDone ? '✓' : (isPast ? '!' : '○')}
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                });
+            }
+            
+            content.innerHTML = html;
+        }
+        
+        function changeWeek(delta) {
+            currentWeekStart.setDate(currentWeekStart.getDate() + (delta * 7));
+            renderAgenda();
+        }
+        
+        function openPresenceModal(coursId, date) {
+            const cours = getMyCours().find(c => c.id === coursId);
+            if (!cours) return;
+            
+            const presences = cours.presences?.[date] || {};
+            const apprenants = cours.apprenants || [];
+            
+            let html = `
+                <p style="margin-bottom: 15px; color: var(--gray);">
+                    📅 ${formatDateFull(new Date(date))}<br>
+                    📚 ${cours.niveau} ${cours.type === 'TP+J' ? 'TP+Junior' : cours.type}
+                </p>
+            `;
+            
+            if (apprenants.length === 0) {
+                html += '<p style="text-align: center; color: var(--gray);">Aucun apprenant inscrit</p>';
+            } else {
+                apprenants.forEach((app, i) => {
+                    const status = presences[i] || '';
+                    html += `
+                        <div class="apprenant-item">
+                            <div>
+                                <div class="apprenant-name">${app.nom || 'Apprenant ' + (i+1)}</div>
+                                ${app.codeCandidat ? `<div class="apprenant-code">${app.codeCandidat}</div>` : ''}
+                            </div>
+                            <div class="presence-toggle">
+                                <button class="presence-btn ${status === 'present' ? 'done' : ''}" 
+                                        onclick="setPresence('${coursId}', '${date}', ${i}, 'present')">✓</button>
+                                <button class="presence-btn ${status === 'absent' ? 'done' : ''}" style="${status === 'absent' ? 'background: var(--danger); border-color: var(--danger);' : ''}"
+                                        onclick="setPresence('${coursId}', '${date}', ${i}, 'absent')">✗</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += `
+                <button class="btn btn-success btn-block" style="margin-top: 20px;" onclick="markSeanceDone('${coursId}', '${date}'); closeModal();">
+                    ✓ Valider les présences
+                </button>
+            `;
+            
+            showModal('Présences', html);
+        }
+        
+        function setPresence(coursId, date, appIndex, status) {
+            const coursIndex = currentSessionData.coursPrepa.findIndex(c => c.id === coursId);
+            if (coursIndex === -1) return;
+            
+            const cours = currentSessionData.coursPrepa[coursIndex];
+            if (!cours.presences) cours.presences = {};
+            if (!cours.presences[date]) cours.presences[date] = {};
+            
+            cours.presences[date][appIndex] = status;
+            
+            // Update Firebase
+            saveCoursToFirebase(coursIndex, cours);
+            
+            // Refresh modal
+            openPresenceModal(coursId, date);
+        }
+        
+        function markSeanceDone(coursId, date) {
+            const coursIndex = currentSessionData.coursPrepa.findIndex(c => c.id === coursId);
+            if (coursIndex === -1) return;
+            
+            const cours = currentSessionData.coursPrepa[coursIndex];
+            const seanceIndex = (cours.seances || []).findIndex(s => s.date === date);
+            
+            if (seanceIndex !== -1) {
+                cours.seances[seanceIndex].status = 'done';
+                saveCoursToFirebase(coursIndex, cours);
+            }
+        }
+        
+        // ============ COURS ============
+        function renderCours() {
+            const myCours = getMyCours();
+            const content = document.getElementById('mainContent');
+            
+            if (myCours.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📚</div>
+                        <p>Aucun cours assigné</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Stats
+            let totalApprenants = 0;
+            let totalHeures = 0;
+            myCours.forEach(c => {
+                totalApprenants += c.apprenants?.length || 0;
+                totalHeures += c.heures || 0;
+            });
+            
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${myCours.length}</div>
+                        <div class="stat-label">Cours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalApprenants}</div>
+                        <div class="stat-label">Apprenants</div>
+                    </div>
+                </div>
+            `;
+            
+            myCours.forEach((cours, index) => {
+                const typeFull = cours.type === 'TP+J' ? 'TP + Junior' : (cours.type === 'J' ? 'Junior' : 'Tout Public');
+                const nbApprenants = cours.apprenants?.length || 0;
+                const isRegrouped = cours.type === 'TP+J';
+                
+                html += `
+                    <div class="cours-card ${isRegrouped ? 'regrouped' : ''}" onclick="showCoursDetail(${index})">
+                        <div class="cours-header">
+                            <div>
+                                <span class="cours-niveau">${cours.niveau}</span>
+                                <span class="badge ${isRegrouped ? 'badge-purple' : 'badge-primary'}">${typeFull}</span>
+                            </div>
+                            <span class="badge badge-success">${nbApprenants} inscrit${nbApprenants > 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="cours-meta">
+                            <span>🕐 ${cours.heures}h total</span>
+                            <span>📅 ${cours.jours?.join('-') || 'N/A'}</span>
+                        </div>
+                        <div class="cours-meta">
+                            <span>⏰ ${cours.heureDebut || '14:00'} - ${cours.heureFin || '16:00'}</span>
+                        </div>
+                        ${cours.dateDebut ? `
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${calculateProgress(cours)}%;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--gray); margin-top: 4px;">
+                                ${formatDateShort(new Date(cours.dateDebut))} → ${cours.dateFin ? formatDateShort(new Date(cours.dateFin)) : '...'}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
+        
+        function showCoursDetail(index) {
+            const cours = getMyCours()[index];
+            if (!cours) return;
+            
+            selectedCours = cours;
+            
+            const typeFull = cours.type === 'TP+J' ? 'TP + Junior' : (cours.type === 'J' ? 'Junior' : 'Tout Public');
+            
+            let html = `
+                <div class="page-header">
+                    <button class="back-btn" onclick="showTab('cours')">←</button>
+                    <h2 class="section-title">${cours.niveau} ${typeFull}</h2>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📋 Informations</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Durée</span>
+                        <span class="profil-info-value">${cours.heures}h</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Jours</span>
+                        <span class="profil-info-value">${cours.jours?.join(', ') || 'N/A'}</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Horaires</span>
+                        <span class="profil-info-value">${cours.heureDebut || '14:00'} - ${cours.heureFin || '16:00'}</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Période</span>
+                        <span class="profil-info-value">${cours.dateDebut ? formatDateShort(new Date(cours.dateDebut)) : 'N/A'} → ${cours.dateFin ? formatDateShort(new Date(cours.dateFin)) : 'N/A'}</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">👥 Apprenants</span>
+                        <span class="badge badge-primary">${cours.apprenants?.length || 0}</span>
+                    </div>
+            `;
+            
+            (cours.apprenants || []).forEach((app, i) => {
+                html += `
+                    <div class="apprenant-item">
+                        <div>
+                            <div class="apprenant-name">${app.nom || 'Apprenant ' + (i+1)}</div>
+                            ${app.codeCandidat ? `<div class="apprenant-code">Code: ${app.codeCandidat}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (!cours.apprenants || cours.apprenants.length === 0) {
+                html += '<p style="text-align: center; color: var(--gray); padding: 15px;">Aucun apprenant inscrit</p>';
+            }
+            
+            html += '</div>';
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        // ============ EVALUATIONS ============
+        function renderEvaluations() {
+            const myCours = getMyCours();
+            const content = document.getElementById('mainContent');
+            
+            if (myCours.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📝</div>
+                        <p>Aucun cours à évaluer</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <div class="tabs">
+                    <div class="tab active" onclick="switchEvalTab('notes')">📝 Notes</div>
+                    <div class="tab" onclick="switchEvalTab('delfblanc')">📋 DELF Blanc</div>
+                </div>
+                
+                <div id="evalNotesSection">
+            `;
+            
+            // Notes section
+            myCours.forEach((cours, coursIndex) => {
+                const typeFull = cours.type === 'TP+J' ? 'TP+J' : cours.type;
+                const apprenants = cours.apprenants || [];
+                
+                html += `
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">${cours.niveau} ${typeFull}</span>
+                            <span class="badge badge-primary">${apprenants.length} apprenants</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Type d'évaluation</label>
+                            <select id="evalType_${cours.id}" onchange="loadEvalNotes('${cours.id}')" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                                <option value="devoir1">Devoir 1</option>
+                                <option value="devoir2">Devoir 2</option>
+                                <option value="devoir3">Devoir 3</option>
+                                <option value="mi_parcours">Mi-parcours</option>
+                            </select>
+                        </div>
+                        
+                        <div id="evalList_${cours.id}">
+                `;
+                
+                apprenants.forEach((app, i) => {
+                    const note = cours.evaluations?.devoir1?.[i] || '';
+                    html += `
+                        <div class="apprenant-item">
+                            <span class="apprenant-name">${app.nom || 'Apprenant ' + (i+1)}</span>
+                            <input type="number" class="note-input" id="note_${cours.id}_${i}" 
+                                   value="${note}" min="0" max="100" placeholder="--">
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                        <button class="btn btn-success btn-block" style="margin-top: 15px;" onclick="saveEvaluations('${cours.id}')">
+                            💾 Enregistrer
+                        </button>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            // DELF Blanc section
+            html += '<div id="evalDelfBlancSection" class="hidden">';
+            
+            myCours.forEach(cours => {
+                const typeFull = cours.type === 'TP+J' ? 'TP+J' : cours.type;
+                const apprenants = cours.apprenants || [];
+                
+                html += `
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">${cours.niveau} ${typeFull}</span>
+                        </div>
+                `;
+                
+                apprenants.forEach((app, i) => {
+                    const notes = cours.delfBlanc?.[i] || {};
+                    html += `
+                        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                            <div style="font-weight: 600; margin-bottom: 10px;">${app.nom || 'Apprenant ' + (i+1)}</div>
+                            <div class="delf-grid">
+                                <div class="delf-item">
+                                    <label>CO</label>
+                                    <input type="number" id="delf_${cours.id}_${i}_co" value="${notes.co || ''}" min="0" max="25" placeholder="/25">
+                                </div>
+                                <div class="delf-item">
+                                    <label>CE</label>
+                                    <input type="number" id="delf_${cours.id}_${i}_ce" value="${notes.ce || ''}" min="0" max="25" placeholder="/25">
+                                </div>
+                                <div class="delf-item">
+                                    <label>PE</label>
+                                    <input type="number" id="delf_${cours.id}_${i}_pe" value="${notes.pe || ''}" min="0" max="25" placeholder="/25">
+                                </div>
+                                <div class="delf-item">
+                                    <label>PO</label>
+                                    <input type="number" id="delf_${cours.id}_${i}_po" value="${notes.po || ''}" min="0" max="25" placeholder="/25">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        <button class="btn btn-success btn-block" onclick="saveDelfBlanc('${cours.id}')">
+                            💾 Enregistrer DELF Blanc
+                        </button>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            content.innerHTML = html;
+        }
+        
+        function switchEvalTab(tab) {
+            document.querySelectorAll('.tabs .tab').forEach((t, i) => {
+                t.classList.toggle('active', (tab === 'notes' && i === 0) || (tab === 'delfblanc' && i === 1));
+            });
+            
+            document.getElementById('evalNotesSection').classList.toggle('hidden', tab !== 'notes');
+            document.getElementById('evalDelfBlancSection').classList.toggle('hidden', tab !== 'delfblanc');
+        }
+        
+        function loadEvalNotes(coursId) {
+            const cours = getMyCours().find(c => c.id === coursId);
+            if (!cours) return;
+            
+            const evalType = document.getElementById(`evalType_${coursId}`).value;
+            const evaluations = cours.evaluations?.[evalType] || {};
+            
+            (cours.apprenants || []).forEach((app, i) => {
+                const input = document.getElementById(`note_${coursId}_${i}`);
+                if (input) input.value = evaluations[i] || '';
+            });
+        }
+        
+        function saveEvaluations(coursId) {
+            const coursIndex = currentSessionData.coursPrepa.findIndex(c => c.id === coursId);
+            if (coursIndex === -1) return;
+            
+            const cours = currentSessionData.coursPrepa[coursIndex];
+            const evalType = document.getElementById(`evalType_${coursId}`).value;
+            
+            if (!cours.evaluations) cours.evaluations = {};
+            if (!cours.evaluations[evalType]) cours.evaluations[evalType] = {};
+            
+            (cours.apprenants || []).forEach((app, i) => {
+                const input = document.getElementById(`note_${coursId}_${i}`);
+                if (input && input.value) {
+                    cours.evaluations[evalType][i] = parseFloat(input.value);
+                }
+            });
+            
+            saveCoursToFirebase(coursIndex, cours);
+            alert('✅ Notes enregistrées !');
+        }
+        
+        function saveDelfBlanc(coursId) {
+            const coursIndex = currentSessionData.coursPrepa.findIndex(c => c.id === coursId);
+            if (coursIndex === -1) return;
+            
+            const cours = currentSessionData.coursPrepa[coursIndex];
+            if (!cours.delfBlanc) cours.delfBlanc = {};
+            
+            (cours.apprenants || []).forEach((app, i) => {
+                const co = document.getElementById(`delf_${coursId}_${i}_co`)?.value;
+                const ce = document.getElementById(`delf_${coursId}_${i}_ce`)?.value;
+                const pe = document.getElementById(`delf_${coursId}_${i}_pe`)?.value;
+                const po = document.getElementById(`delf_${coursId}_${i}_po`)?.value;
+                
+                if (co || ce || pe || po) {
+                    cours.delfBlanc[i] = {
+                        co: parseFloat(co) || 0,
+                        ce: parseFloat(ce) || 0,
+                        pe: parseFloat(pe) || 0,
+                        po: parseFloat(po) || 0,
+                        total: (parseFloat(co) || 0) + (parseFloat(ce) || 0) + (parseFloat(pe) || 0) + (parseFloat(po) || 0)
+                    };
+                }
+            });
+            
+            saveCoursToFirebase(coursIndex, cours);
+            alert('✅ DELF Blanc enregistré !');
+        }
+        
+        // ============ RESULTATS ============
+        function renderResultats() {
+            const myCandidats = getMyCandidats();
+            const content = document.getElementById('mainContent');
+            
+            // Stats
+            let admis = 0, refuses = 0, attente = 0;
+            myCandidats.forEach(c => {
+                if (c.noteTotal >= 50 && c.noteCO >= 5 && c.noteCE >= 5 && c.notePE >= 5 && c.notePO >= 5) admis++;
+                else if (c.noteTotal !== undefined) refuses++;
+                else attente++;
+            });
+            
+            const tauxReussite = myCandidats.length > 0 ? Math.round((admis / myCandidats.length) * 100) : 0;
+            
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--success);">${admis}</div>
+                        <div class="stat-label">Admis</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--danger);">${refuses}</div>
+                        <div class="stat-label">Refusés</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${attente}</div>
+                        <div class="stat-label">En attente</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${tauxReussite}%</div>
+                        <div class="stat-label">Taux réussite</div>
+                    </div>
+                </div>
+            `;
+            
+            if (myCandidats.length === 0) {
+                html += `
+                    <div class="empty-state">
+                        <div class="icon">🏆</div>
+                        <p>Aucun candidat lié à vos cours</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px;">
+                            Les résultats apparaîtront quand les candidats seront liés à vos apprenants.
+                        </p>
+                    </div>
+                `;
+            } else {
+                html += '<div class="card">';
+                
+                myCandidats.forEach(cand => {
+                    const isAdmis = cand.noteTotal >= 50 && cand.noteCO >= 5 && cand.noteCE >= 5 && cand.notePE >= 5 && cand.notePO >= 5;
+                    const hasResult = cand.noteTotal !== undefined;
+                    
+                    html += `
+                        <div class="result-item">
+                            <div>
+                                <div class="apprenant-name">${cand.nom} ${cand.prenom || ''}</div>
+                                <div class="apprenant-code">${cand.niveau} - ${cand.codeCandidat || 'N/A'}</div>
+                                ${hasResult ? `<div style="font-size: 0.8rem; color: var(--gray);">Total: ${cand.noteTotal}/100</div>` : ''}
+                            </div>
+                            <span class="result-badge ${hasResult ? (isAdmis ? 'admis' : 'refuse') : 'attente'}">
+                                ${hasResult ? (isAdmis ? '✓ Admis' : '✗ Refusé') : '⏳ Attente'}
+                            </span>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            content.innerHTML = html;
+        }
+        
+        // ============ MORE MENU ============
+        function renderMore() {
+            const content = document.getElementById('mainContent');
+            
+            content.innerHTML = `
+                <div class="doc-card" onclick="showSalaire()">
+                    <div class="doc-icon">💰</div>
+                    <div class="doc-info">
+                        <h4>Mes Heures</h4>
+                        <p>Voir mon salaire et heures</p>
+                    </div>
+                </div>
+                
+                <div class="doc-card" onclick="showDocumentation()">
+                    <div class="doc-icon">📖</div>
+                    <div class="doc-info">
+                        <h4>Documentation</h4>
+                        <p>Grilles d'évaluation et descripteurs</p>
+                    </div>
+                </div>
+                
+                <div class="doc-card" onclick="showProfil()">
+                    <div class="doc-icon">👤</div>
+                    <div class="doc-info">
+                        <h4>Mon Profil</h4>
+                        <p>Mes informations</p>
+                    </div>
+                </div>
+                
+                <div class="doc-card" onclick="showAide()">
+                    <div class="doc-icon">❓</div>
+                    <div class="doc-info">
+                        <h4>Aide</h4>
+                        <p>Comment utiliser l'application</p>
+                    </div>
+                </div>
+                
+                <button class="btn btn-danger btn-block" style="margin-top: 20px;" onclick="logout()">
+                    🚪 Déconnexion
+                </button>
+            `;
+        }
+        
+        // ============ SALAIRE ============
+        function showSalaire() {
+            const myCours = getMyCours();
+            const profData = currentProfData || {};
+            const salaireHoraire = profData.salaireHoraire || 0;
+            const isCDI = salaireHoraire === 0;
+            
+            let totalHeures = 0;
+            myCours.forEach(c => totalHeures += c.heures || 0);
+            
+            const totalSalaire = totalHeures * salaireHoraire;
+            
+            let html = `
+                <div class="page-header">
+                    <button class="back-btn" onclick="showTab('more')">←</button>
+                    <h2 class="section-title">💰 Mes Heures</h2>
+                </div>
+                
+                <div class="salaire-card ${isCDI ? 'cdi' : ''}">
+                    ${isCDI ? `
+                        <div class="salaire-label">Contrat CDI</div>
+                        <div class="salaire-amount">Salarié</div>
+                        <div class="salaire-label">Pas de paiement à l'heure</div>
+                    ` : `
+                        <div class="salaire-label">Salaire total session</div>
+                        <div class="salaire-amount">${formatMoney(totalSalaire)} KMF</div>
+                        <div class="salaire-label">${totalHeures}h × ${formatMoney(salaireHoraire)} KMF/h</div>
+                    `}
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${myCours.length}</div>
+                        <div class="stat-label">Cours</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalHeures}h</div>
+                        <div class="stat-label">Total heures</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📚 Détail par cours</div>
+            `;
+            
+            myCours.forEach(c => {
+                const typeFull = c.type === 'TP+J' ? 'TP+J' : c.type;
+                const coursGain = isCDI ? '-' : formatMoney(c.heures * salaireHoraire) + ' KMF';
+                
+                html += `
+                    <div class="profil-info-item">
+                        <div>
+                            <strong>${c.niveau} ${typeFull}</strong>
+                            <div style="font-size: 0.8rem; color: var(--gray);">${c.heures}h</div>
+                        </div>
+                        <span style="font-weight: 600; color: ${isCDI ? 'var(--primary)' : 'var(--success)'};">${coursGain}</span>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        // ============ DOCUMENTATION ============
+        function showDocumentation() {
+            const myCours = getMyCours();
+            const niveaux = [...new Set(myCours.map(c => c.niveau))];
+            
+            let html = `
+                <div class="page-header">
+                    <button class="back-btn" onclick="showTab('more')">←</button>
+                    <h2 class="section-title">📖 Documentation</h2>
+                </div>
+            `;
+            
+            // Descripteurs par niveau
+            html += '<div class="card"><div class="card-title">📋 Descripteurs CECRL</div>';
+            
+            niveaux.forEach(niveau => {
+                const desc = DESCRIPTEURS[niveau];
+                if (desc) {
+                    html += `
+                        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;" onclick="showDescripteurDetail('${niveau}')">
+                            <div style="font-weight: 600; color: var(--primary);">${niveau} - ${desc.titre.split(' - ')[1]}</div>
+                            <p style="font-size: 0.85rem; color: var(--gray); margin-top: 5px;">${desc.description.substring(0, 100)}...</p>
+                        </div>
+                    `;
+                }
+            });
+            html += '</div>';
+            
+            // Grilles PE
+            html += `
+                <div class="doc-card" onclick="showGrillePE()">
+                    <div class="doc-icon">✍️</div>
+                    <div class="doc-info">
+                        <h4>Grille PE</h4>
+                        <p>Production Écrite</p>
+                    </div>
+                </div>
+            `;
+            
+            // Grilles PO
+            html += `
+                <div class="doc-card" onclick="showGrillePO()">
+                    <div class="doc-icon">🎤</div>
+                    <div class="doc-info">
+                        <h4>Grille PO</h4>
+                        <p>Production Orale</p>
+                    </div>
+                </div>
+            `;
+            
+            // Évaluer un apprenant
+            html += `
+                <div class="doc-card" onclick="showEvaluerApprenant()">
+                    <div class="doc-icon">📝</div>
+                    <div class="doc-info">
+                        <h4>Évaluer un apprenant</h4>
+                        <p>Utiliser les grilles pour noter</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        function showDescripteurDetail(niveau) {
+            const desc = DESCRIPTEURS[niveau];
+            if (!desc) return;
+            
+            const html = `
+                <h4 style="color: var(--primary); margin-bottom: 15px;">${desc.titre}</h4>
+                <p style="margin-bottom: 15px;">${desc.description}</p>
+                
+                <h5 style="margin-bottom: 10px;">✍️ Production Écrite</h5>
+                <p style="margin-bottom: 15px; color: var(--gray);">${desc.pe}</p>
+                
+                <h5 style="margin-bottom: 10px;">🎤 Production Orale</h5>
+                <p style="color: var(--gray);">${desc.po}</p>
+            `;
+            
+            showModal(`Niveau ${niveau}`, html);
+        }
+        
+        function showGrillePE() {
+            const myCours = getMyCours();
+            const niveau = myCours[0]?.niveau || 'B1';
+            const grille = GRILLES.PE[niveau] || GRILLES.PE.B1;
+            
+            let html = `
+                <p style="margin-bottom: 15px;">Grille d'évaluation PE - Niveau ${niveau}</p>
+                <table class="grille-table">
+                    <tr>
+                        <th>Critère</th>
+                        <th>Points</th>
+                    </tr>
+            `;
+            
+            grille.forEach(item => {
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${item.critere}</strong>
+                            <div style="font-size: 0.75rem; color: var(--gray);">${item.description}</div>
+                        </td>
+                        <td style="text-align: center; font-weight: 600;">${item.points}</td>
+                    </tr>
+                `;
+            });
+            
+            const total = grille.reduce((sum, item) => sum + item.points, 0);
+            html += `
+                    <tr style="background: var(--primary); color: white;">
+                        <td><strong>TOTAL</strong></td>
+                        <td style="text-align: center;"><strong>${total}</strong></td>
+                    </tr>
+                </table>
+            `;
+            
+            showModal('Grille PE', html);
+        }
+        
+        function showGrillePO() {
+            const myCours = getMyCours();
+            const niveau = myCours[0]?.niveau || 'B1';
+            const grille = GRILLES.PO[niveau] || GRILLES.PO.B1;
+            
+            let html = `
+                <p style="margin-bottom: 15px;">Grille d'évaluation PO - Niveau ${niveau}</p>
+                <table class="grille-table">
+                    <tr>
+                        <th>Critère</th>
+                        <th>Points</th>
+                    </tr>
+            `;
+            
+            grille.forEach(item => {
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${item.critere}</strong>
+                            <div style="font-size: 0.75rem; color: var(--gray);">${item.description}</div>
+                        </td>
+                        <td style="text-align: center; font-weight: 600;">${item.points}</td>
+                    </tr>
+                `;
+            });
+            
+            const total = grille.reduce((sum, item) => sum + item.points, 0);
+            html += `
+                    <tr style="background: var(--primary); color: white;">
+                        <td><strong>TOTAL</strong></td>
+                        <td style="text-align: center;"><strong>${total}</strong></td>
+                    </tr>
+                </table>
+            `;
+            
+            showModal('Grille PO', html);
+        }
+        
+        function showEvaluerApprenant() {
+            const myCours = getMyCours();
+            const allApprenants = getMyApprenants();
+            
+            let html = `
+                <div class="form-group">
+                    <label>Apprenant</label>
+                    <select id="evalApprenantSelect" style="width: 100%;" onchange="loadEvalGrille()">
+                        <option value="">-- Sélectionnez --</option>
+            `;
+            
+            allApprenants.forEach((app, i) => {
+                html += `<option value="${i}">${app.nom} (${app.coursNiveau})</option>`;
+            });
+            
+            html += `
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Compétence</label>
+                    <select id="evalCompetenceSelect" style="width: 100%;" onchange="loadEvalGrille()">
+                        <option value="PE">✍️ Production Écrite</option>
+                        <option value="PO">🎤 Production Orale</option>
+                    </select>
+                </div>
+                
+                <div id="evalGrilleContainer"></div>
+            `;
+            
+            showModal('Évaluer un apprenant', html);
+        }
+        
+        function loadEvalGrille() {
+            const appIndex = document.getElementById('evalApprenantSelect').value;
+            const competence = document.getElementById('evalCompetenceSelect').value;
+            
+            if (appIndex === '') {
+                document.getElementById('evalGrilleContainer').innerHTML = '';
+                return;
+            }
+            
+            const allApprenants = getMyApprenants();
+            const apprenant = allApprenants[parseInt(appIndex)];
+            const niveau = apprenant.coursNiveau;
+            const grille = GRILLES[competence][niveau] || GRILLES[competence].B1;
+            
+            let html = `
+                <h4 style="margin: 15px 0;">${apprenant.nom} - ${niveau} ${competence}</h4>
+                <table class="grille-table">
+                    <tr>
+                        <th>Critère</th>
+                        <th>Max</th>
+                        <th>Note</th>
+                    </tr>
+            `;
+            
+            grille.forEach((item, i) => {
+                html += `
+                    <tr>
+                        <td><strong>${item.critere}</strong></td>
+                        <td style="text-align: center;">${item.points}</td>
+                        <td><input type="number" id="evalNote_${i}" min="0" max="${item.points}" style="width: 50px; padding: 5px; text-align: center;"></td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                </table>
+                <div style="margin-top: 15px; text-align: center;">
+                    <strong>Total: <span id="evalTotal">0</span> / ${grille.reduce((s, i) => s + i.points, 0)}</strong>
+                </div>
+                <button class="btn btn-success btn-block" style="margin-top: 15px;" onclick="calculateEvalTotal()">
+                    Calculer le total
+                </button>
+            `;
+            
+            document.getElementById('evalGrilleContainer').innerHTML = html;
+        }
+        
+        function calculateEvalTotal() {
+            const inputs = document.querySelectorAll('[id^="evalNote_"]');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            document.getElementById('evalTotal').textContent = total;
+        }
+        
+        // ============ PROFIL ============
+        function showProfil() {
+            const profData = currentProfData || {};
+            const myCours = getMyCours();
+            const myCandidats = getMyCandidats();
+            
+            // Calculate success rate
+            let admis = 0;
+            myCandidats.forEach(c => {
+                if (c.noteTotal >= 50 && c.noteCO >= 5 && c.noteCE >= 5 && c.notePE >= 5 && c.notePO >= 5) admis++;
+            });
+            const tauxReussite = myCandidats.length > 0 ? Math.round((admis / myCandidats.length) * 100) : 0;
+            
+            let totalApprenants = 0;
+            myCours.forEach(c => totalApprenants += c.apprenants?.length || 0);
+            
+            let html = `
+                <div class="page-header">
+                    <button class="back-btn" onclick="showTab('more')">←</button>
+                    <h2 class="section-title">👤 Mon Profil</h2>
+                </div>
+                
+                <div class="profil-header">
+                    <div class="profil-avatar">👨‍🏫</div>
+                    <div class="profil-name">${currentProf}</div>
+                    <div class="profil-role">Professeur ${profData.statut === 'cdi' ? 'CDI' : 'Vacataire'}</div>
+                    
+                    <div class="profil-stat">
+                        <div class="profil-stat-item">
+                            <div class="profil-stat-value">${myCours.length}</div>
+                            <div class="profil-stat-label">Cours</div>
+                        </div>
+                        <div class="profil-stat-item">
+                            <div class="profil-stat-value">${totalApprenants}</div>
+                            <div class="profil-stat-label">Apprenants</div>
+                        </div>
+                        <div class="profil-stat-item">
+                            <div class="profil-stat-value">${tauxReussite}%</div>
+                            <div class="profil-stat-label">Réussite</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📋 Informations</div>
+                    
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Nom</span>
+                        <span class="profil-info-value">${currentProf}</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Niveau enseigné</span>
+                        <span class="profil-info-value">${profData.niveau || 'N/A'}</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Habilitation</span>
+                        <span class="profil-info-value">${profData.habilitation || 'N/A'}</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Contact</span>
+                        <span class="profil-info-value">${profData.contact || profData.telephone || 'N/A'}</span>
+                    </div>
+                    <div class="profil-info-item">
+                        <span class="profil-info-label">Statut</span>
+                        <span class="profil-info-value">${profData.statut === 'cdi' ? 'CDI' : (profData.statut || 'Vacataire')}</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        // ============ AIDE ============
+        function showAide() {
+            let html = `
+                <div class="page-header">
+                    <button class="back-btn" onclick="showTab('more')">←</button>
+                    <h2 class="section-title">❓ Aide</h2>
+                </div>
+                
+                <div class="help-step">
+                    <div class="help-step-number">1</div>
+                    <h4>📅 Mon Agenda</h4>
+                    <p>Consultez votre emploi du temps par semaine. Cliquez sur un cours pour marquer les présences. 
+                    Le bouton ✓ (vert) = présent, ✗ (rouge) = absent.</p>
+                </div>
+                
+                <div class="help-step">
+                    <div class="help-step-number">2</div>
+                    <h4>📚 Mes Cours</h4>
+                    <p>Voir tous vos cours et les apprenants inscrits. 
+                    Les cours TP+Junior sont des cours regroupés avec les deux types.</p>
+                </div>
+                
+                <div class="help-step">
+                    <div class="help-step-number">3</div>
+                    <h4>📝 Évaluations</h4>
+                    <p>Entrez les notes des devoirs et du DELF Blanc. 
+                    Pour le DELF Blanc, notez chaque compétence sur 25.</p>
+                </div>
+                
+                <div class="help-step">
+                    <div class="help-step-number">4</div>
+                    <h4>🏆 Résultats</h4>
+                    <p>Voir les résultats aux examens de vos candidats. 
+                    Un candidat est admis s'il a au moins 50/100 et minimum 5/25 par épreuve.</p>
+                </div>
+                
+                <div class="help-step">
+                    <div class="help-step-number">5</div>
+                    <h4>💰 Mes Heures</h4>
+                    <p>Consultez votre salaire calculé selon vos heures de cours. 
+                    Les profs CDI ne sont pas payés à l'heure.</p>
+                </div>
+                
+                <div class="help-step">
+                    <div class="help-step-number">6</div>
+                    <h4>📖 Documentation</h4>
+                    <p>Consultez les grilles d'évaluation PE et PO pour noter vos apprenants selon les critères officiels DELF.</p>
+                </div>
+                
+                <div class="card" style="background: #e3f2fd;">
+                    <h4 style="color: var(--primary);">🔄 Synchronisation</h4>
+                    <p style="font-size: 0.9rem;">Toutes vos données sont synchronisées en temps réel. 
+                    Le badge "✓ Sync" en haut indique que la connexion fonctionne.</p>
+                </div>
+                
+                <div class="card" style="background: #fff3e0;">
+                    <h4 style="color: var(--warning);">❓ Problème ?</h4>
+                    <p style="font-size: 0.9rem;">Contactez l'administration de l'Alliance Française si vous avez des difficultés.</p>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+        }
+        
+        // ============ FIREBASE SYNC ============
+        function saveCoursToFirebase(coursIndex, cours) {
+            updateSyncBadge('syncing');
+            
+            const coursPath = `sessions/${currentSession}/coursPrepa/${coursIndex}`;
+            
+            db.ref(coursPath).set(cours)
+                .then(() => {
+                    updateSyncBadge('ok');
+                })
+                .catch((error) => {
+                    console.error('Save error:', error);
+                    updateSyncBadge('error');
+                });
+        }
+        
+        function updateSyncBadge(status) {
+            const badge = document.getElementById('syncBadge');
+            badge.className = 'sync-badge ' + status;
+            
+            switch(status) {
+                case 'ok': badge.textContent = '✓ Sync'; break;
+                case 'syncing': badge.textContent = '⏳ ...'; break;
+                case 'error': badge.textContent = '❌ Erreur'; break;
+            }
+        }
+        
+        // ============ HELPERS ============
+        function getMonday(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            d.setDate(diff);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+        
+        function isSameDay(d1, d2) {
+            return d1.getFullYear() === d2.getFullYear() &&
+                   d1.getMonth() === d2.getMonth() &&
+                   d1.getDate() === d2.getDate();
+        }
+        
+        function formatDateShort(date) {
+            return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+        }
+        
+        function formatDateFull(date) {
+            return date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        
+        function formatDayName(date) {
+            return date.toLocaleDateString('fr-FR', { weekday: 'short' });
+        }
+        
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('fr-FR').format(amount || 0);
+        }
+        
+        function calculateProgress(cours) {
+            if (!cours.dateDebut || !cours.dateFin) return 0;
+            
+            const start = new Date(cours.dateDebut);
+            const end = new Date(cours.dateFin);
+            const now = new Date();
+            
+            if (now < start) return 0;
+            if (now > end) return 100;
+            
+            const total = end - start;
+            const elapsed = now - start;
+            return Math.round((elapsed / total) * 100);
+        }
+        
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modalContainer').classList.remove('hidden');
+        }
+        
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalContainer')) {
+                document.getElementById('modalContainer').classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
